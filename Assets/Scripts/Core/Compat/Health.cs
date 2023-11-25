@@ -13,7 +13,7 @@ public class Health : NetworkBehaviour
     [field: SerializeField] public int MaxHealth { get; private set; }
 
 
-    public NetworkVariable<int> _currentHealth = new NetworkVariable<int>(0);
+    private NetworkVariable<int> _currentHealth = new NetworkVariable<int>(0);
 
     private bool _isDead;
 
@@ -55,5 +55,10 @@ public class Health : NetworkBehaviour
             OnPlayerDie?.Invoke();
         }
 
+    }
+    public void ResetHealth()
+    {
+        _currentHealth.Value = MaxHealth;
+        _isDead = false;
     }
 }

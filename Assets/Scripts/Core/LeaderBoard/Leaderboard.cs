@@ -64,17 +64,41 @@ public class Leaderboard : NetworkBehaviour
     {
         AddPlayerToLeaderboard(tank);
 
+        tank.GetComponent<CoinCollector>().OnCollectCoin += (newValue)=> 
+            CoinCollector_OnCollectCoins(tank.OwnerClientId,newValue);
     }
 
 
     private void PlayerTank_OnPlayerDespawn(PlayerTank tank)
     {
         RemovePlayerFromLeaderboard(tank);
+
+        tank.GetComponent<CoinCollector>().OnCollectCoin -= (newValue) =>
+            CoinCollector_OnCollectCoins(tank.OwnerClientId, newValue);
+    }
+
+
+    private void CoinCollector_OnCollectCoins(ulong clientID,int newValue)
+    {
+        for(int i = 0; i < leaderboardItemDatas.Count; i++)
+        {
+            if (leaderboardItemDatas[i].ClientID == clientID)
+            {
+                leaderboardItemDatas[i] = new LeaderboardItemData()
+                {
+                    ClientID = clientID,
+                    PlayerName = leaderboardItemDatas[i].PlayerName,
+                    Score = leaderboardItemDatas[i].Score + newValue,
+                };
+                return;
+            }
+        }
     }
 
     private void AddPlayerToLeaderboard(PlayerTank tank)
     {
         if (leaderboardItemDatas == null) return;
+
         LeaderboardItemData leaderboardItemData = new LeaderboardItemData
         {
             ClientID = tank.OwnerClientId,

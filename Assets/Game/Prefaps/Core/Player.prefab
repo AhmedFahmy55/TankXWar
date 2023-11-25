@@ -190,7 +190,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 721038087
   m_SortingLayer: 3
-  m_SortingOrder: 200
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: a94bf141bd2044c4399e321445c83112, type: 3}
   m_Color: {r: 0, g: 1, b: 0.6625743, a: 1}
   m_FlipX: 0
@@ -635,7 +635,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 721038087
-  m_SortingOrder: 2
+  m_SortingOrder: 6
   m_TargetDisplay: 0
 --- !u!114 &5846407382315503048
 MonoBehaviour:
@@ -948,6 +948,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerCam: {fileID: 5229409840228458956}
   <PlayerHealth>k__BackingField: {fileID: 7223275777370229435}
+  <CoinCollector>k__BackingField: {fileID: 8014158512244186078}
   playerCamPrio: 20
   PlayerName:
     m_InternalValue:
@@ -1049,8 +1050,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <MaxHealth>k__BackingField: 100
-  _currentHealth:
-    m_InternalValue: 0
 --- !u!114 &8014158512244186078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1063,8 +1062,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfea77d3a1d31354b8e36464c9a9a9a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  totalCoins:
-    m_InternalValue: 0
 --- !u!1 &6559859023121730937
 GameObject:
   m_ObjectHideFlags: 0
@@ -1137,7 +1134,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 721038087
   m_SortingLayer: 3
-  m_SortingOrder: 100
+  m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 8769e4453ce5bc3429cfba7d58fbef13, type: 3}
   m_Color: {r: 0, g: 1, b: 0.6627451, a: 1}
   m_FlipX: 0

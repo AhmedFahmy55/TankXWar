@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class RespawnHandler : NetworkBehaviour
 {
-    [SerializeField] NetworkObject playerTankPrefap;
+    [SerializeField] PlayerTank playerTankPrefap;
 
 
     [SerializeField] float respawnCallDown = 1;
-
+    [SerializeField,Range(0,1)] float coinsLossRation;
 
     public override void OnNetworkSpawn()
     {
@@ -47,15 +47,17 @@ public class RespawnHandler : NetworkBehaviour
 
     private void PlayerTank_OnPlayerDie(PlayerTank playerTank)
     {
+        int remainingCoins = (int)(playerTank.CoinCollector.GetCoins() * coinsLossRation);
         Destroy(playerTank.gameObject);
-        StartCoroutine(RespawnPlayerTanl(playerTank.OwnerClientId));
+        StartCoroutine(RespawnPlayerTanl(playerTank.OwnerClientId, remainingCoins));
     }
 
-    private IEnumerator RespawnPlayerTanl(ulong ownerClientId)
+    private IEnumerator RespawnPlayerTanl(ulong ownerClientId,int remainingCoins)
     {
         yield return new WaitForSeconds(respawnCallDown);
 
-        NetworkObject networkObject = Instantiate(playerTankPrefap, SpwanPoint.GetRandomSpwanPint(), Quaternion.identity);
-        networkObject.SpawnAsPlayerObject(ownerClientId);
+        PlayerTank playerTank = Instantiate(playerTankPrefap, SpwanPoint.GetRandomSpwanPint(), Quaternion.identity);
+        playerTank.NetworkObject.SpawnAsPlayerObject(ownerClientId);
+        playerTank.CoinCollector.SetCoins(remainingCoins);
     }
 }

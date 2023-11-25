@@ -6,14 +6,31 @@ using UnityEngine;
 
 public class CoinCollector : NetworkBehaviour
 {
+    public event Action<int> OnCollectCoin;
+    public event Action<int> OnCoinsValueChage;
+
+    private NetworkVariable<int> totalCoins = new NetworkVariable<int>(0);
 
 
-    public NetworkVariable<int> totalCoins = new NetworkVariable<int>(0);
 
+    public override void OnNetworkSpawn()
+    {
+        totalCoins.OnValueChanged += (old, newV) => OnCoinsValueChage?.Invoke(newV);
+    }
+    public override void OnNetworkDespawn()
+    {
+        totalCoins.OnValueChanged -= (old, newV) => OnCoinsValueChage?.Invoke(newV);
+
+    }
 
     public int GetCoins()
     {
         return totalCoins.Value;
+    }
+
+    public void SetCoins(int value)
+    {
+        totalCoins.Value = value;
     }
 
     public void SpendCoins(int shootCost)
@@ -27,8 +44,10 @@ public class CoinCollector : NetworkBehaviour
 
         int value = coin.Collect();
 
+        OnCollectCoin?.Invoke(value);
         if (!IsServer) return;
 
         totalCoins.Value += value;
+
     }
 }

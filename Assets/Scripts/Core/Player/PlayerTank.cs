@@ -16,6 +16,8 @@ public class PlayerTank : NetworkBehaviour
     [Header("Refs")]
     [SerializeField] CinemachineVirtualCamera playerCam;
     [field: SerializeField] public Health PlayerHealth { get; private set; }
+    [field: SerializeField] public CoinCollector CoinCollector { get; private set; }
+
 
 
     [Header("Settings")]
@@ -29,16 +31,18 @@ public class PlayerTank : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if(IsServer)
+
+        if (IsServer)
         {
             PlayerName.Value = HostSingelton.Instance.HostManager.NetworkServer.
                 GetPlayerDataByClientID(OwnerClientId).playerName;
-            OnPlayerSpawn?.Invoke(this);
         }
         if(IsOwner)
         {
             playerCam.Priority = playerCamPrio;
         }
+        OnPlayerSpawn?.Invoke(this);
+
     }
 
     public override void OnNetworkDespawn()

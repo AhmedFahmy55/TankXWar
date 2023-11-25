@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class LeaderboardUI : MonoBehaviour
 {
-
+    [Header("Refs")]
     [SerializeField] Transform spawnparent;
     [SerializeField] LeaderboardItemUI itemPrefap;
     [SerializeField] Leaderboard leaderboard;
@@ -42,6 +42,31 @@ public class LeaderboardUI : MonoBehaviour
                 UpdateBoardElement(changeEvent.Value);
                 break;
         }
+        UpdateLeaderboardOrder(); 
+    }
+
+    private void UpdateLeaderboardOrder()
+    {
+        //TODO refacot leadeboard ui to work with show hode insted of mask
+
+        leaderboardItems.Sort((x,y) => y.Score.CompareTo(x.Score));
+
+        for(int i = 0; i < leaderboardItems.Count; i++)
+        {
+            leaderboardItems[i].transform.SetSiblingIndex(i);
+            leaderboardItems[i].UpdateOrder();
+        }
+
+        LeaderboardItemUI leaderboardItemUI = leaderboardItems.
+            FirstOrDefault(i => i.ClientID == NetworkManager.Singleton.LocalClientId);
+
+        if (leaderboardItemUI == null) return;
+
+        if (leaderboardItemUI.transform.GetSiblingIndex() <= 7) return;
+
+        leaderboardItemUI.transform.SetSiblingIndex(7);
+
+
     }
 
     private void UpdateBoardElement(LeaderboardItemData newData)
@@ -65,7 +90,6 @@ public class LeaderboardUI : MonoBehaviour
         }
     }
 
-
     private void AddLeaderboardElement(LeaderboardItemData data)
     {
         if (leaderboardItems.Any((x) => x.ClientID == data.ClientID)) return;
@@ -74,6 +98,4 @@ public class LeaderboardUI : MonoBehaviour
         leaderboardItem.Init(data);
         leaderboardItems.Add(leaderboardItem);
     }
-
-
 }
