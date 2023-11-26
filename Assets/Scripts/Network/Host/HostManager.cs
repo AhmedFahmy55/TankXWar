@@ -83,7 +83,13 @@ public class HostManager : IDisposable
         string playerName = PlayerPrefs.GetString(LobbyCreationUI.Player_Name_Key,
                 "Player" + UnityEngine.Random.Range(1, 100));
 
-        PlayerData playerData = new PlayerData{ playerName = playerName };
+        PlayerData playerData = new PlayerData
+        {
+            playerName = playerName,
+            playerAuthID = AuthenticationService.Instance.PlayerId,
+            PlayerScore = 0,
+        };
+
         byte[] payLoadByts = Encoding.UTF8.GetBytes(JsonUtility.ToJson(playerData));
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payLoadByts;
 

@@ -8,4 +8,5 @@ public class PlayerData
 {
     public string playerName;
     public string playerAuthID;
+    public int PlayerScore;
 }

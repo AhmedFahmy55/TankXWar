@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class NetworkServer : IDisposable
 {
-
+    public event Action<ulong> OnClientDisconnect;
 
     private Dictionary<ulong,string> clientIDToAuthID = new Dictionary<ulong,string>();
     private Dictionary<string, PlayerData> authIDToPlayerData = new Dictionary<string, PlayerData>();
@@ -36,6 +36,17 @@ public class NetworkServer : IDisposable
         return null;
     }
 
+    public void UpdatePlayerData(ulong clientID, PlayerData playerData)
+    {
+        if (clientIDToAuthID.TryGetValue(clientID, out string authID))
+        {
+            if (authIDToPlayerData.ContainsKey(authID))
+            {
+                authIDToPlayerData[authID] = playerData;
+            }
+        }
+    }
+
     private void ConnetionApprovalCallBack(
          NetworkManager.ConnectionApprovalRequest request, NetworkManager.ConnectionApprovalResponse response)
 
@@ -55,10 +66,10 @@ public class NetworkServer : IDisposable
 
     private void OnServerReady()
     {
-        networkManager.OnClientDisconnectCallback += OnClientDisconnect;
+        networkManager.OnClientDisconnectCallback += NetworkManager_OnClientDisconnect;
     }
 
-    private void OnClientDisconnect(ulong clientID)
+    private void NetworkManager_OnClientDisconnect(ulong clientID)
     {
         if(clientIDToAuthID.TryGetValue(clientID,out string authID))
         {
@@ -71,7 +82,7 @@ public class NetworkServer : IDisposable
     {
         if(networkManager) networkManager.ConnectionApprovalCallback = null;
         if(networkManager) networkManager.OnServerStarted -= OnServerReady;
-        if(networkManager) networkManager.OnClientDisconnectCallback -= OnClientDisconnect;
+        if(networkManager) networkManager.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnect;
 
     }
 }

@@ -23,7 +23,6 @@ public class Leaderboard : NetworkBehaviour
         if(IsClient)
         {
             leaderboardItemDatas.OnListChanged += OnLeaderboardChange;
-
             foreach (var item in leaderboardItemDatas)
             {
                 OnLeaderboardChange(new NetworkListEvent<LeaderboardItemData>()
@@ -84,12 +83,17 @@ public class Leaderboard : NetworkBehaviour
         {
             if (leaderboardItemDatas[i].ClientID == clientID)
             {
+                PlayerData playerData = HostSingelton.Instance.HostManager.NetworkServer.GetPlayerDataByClientID(clientID);
+                playerData.PlayerScore = leaderboardItemDatas[i].Score + newValue;
+                HostSingelton.Instance.HostManager.NetworkServer.UpdatePlayerData(clientID, playerData);
+
                 leaderboardItemDatas[i] = new LeaderboardItemData()
                 {
                     ClientID = clientID,
                     PlayerName = leaderboardItemDatas[i].PlayerName,
-                    Score = leaderboardItemDatas[i].Score + newValue,
+                    Score = playerData.PlayerScore,
                 };
+
                 return;
             }
         }
@@ -99,11 +103,12 @@ public class Leaderboard : NetworkBehaviour
     {
         if (leaderboardItemDatas == null) return;
 
+        PlayerData playerData = HostSingelton.Instance.HostManager.NetworkServer.GetPlayerDataByClientID(tank.OwnerClientId);
         LeaderboardItemData leaderboardItemData = new LeaderboardItemData
         {
             ClientID = tank.OwnerClientId,
             PlayerName = tank.PlayerName.Value,
-            Score = 0
+            Score = playerData == null ? 0 :playerData.PlayerScore
         };
         leaderboardItemDatas.Add(leaderboardItemData);
     }
