@@ -26,7 +26,7 @@ public class RespwaningCoin : Coin
     }
 
 
-    public void Reset()
+    public void ResetCoin()
     {
         isCollected = false;
         Show(true);

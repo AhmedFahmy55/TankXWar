@@ -65,7 +65,7 @@ public class CoinsSpwaner : NetworkBehaviour
     private void ResetCoinClientRpc(NetworkObjectReference coin)
     {
         if (!coin.TryGet(out NetworkObject coinRef)) return;
-        coinRef.GetComponent<RespwaningCoin>().Reset();
+        coinRef.GetComponent<RespwaningCoin>().ResetCoin();
     }
     private bool TryGetPosition(out Vector2 pos)
     {

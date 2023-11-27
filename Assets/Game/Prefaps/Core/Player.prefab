@@ -1062,6 +1062,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfea77d3a1d31354b8e36464c9a9a9a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bountyCoinPrefap: {fileID: -2461556720655497093, guid: e8779fb55a6a88e48936adfadd61530f, type: 3}
+  playerHealth: {fileID: 7223275777370229435}
+  bountyValueRation: 0.3
+  bountyCoinsCount: 10
+  minBountyVlaue: 50
+  dropeRange: 5
+  blockLayerMask:
+    serializedVersion: 2
+    m_Bits: 257
 --- !u!1 &6559859023121730937
 GameObject:
   m_ObjectHideFlags: 0
