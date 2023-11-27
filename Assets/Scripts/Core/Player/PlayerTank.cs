@@ -31,16 +31,17 @@ public class PlayerTank : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
+        if (IsOwner)
+        {
+            playerCam.Priority = playerCamPrio;
+        }
 
         if (IsServer)
         {
             PlayerName.Value = HostSingelton.Instance.HostManager.NetworkServer.
                 GetPlayerDataByClientID(OwnerClientId).playerName;
         }
-        if(IsOwner)
-        {
-            playerCam.Priority = playerCamPrio;
-        }
+
         OnPlayerSpawn?.Invoke(this);
 
     }

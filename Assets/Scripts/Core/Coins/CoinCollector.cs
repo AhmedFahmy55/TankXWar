@@ -20,8 +20,7 @@ public class CoinCollector : NetworkBehaviour
     [SerializeField] private float dropeRange = 3f;
     [SerializeField] private LayerMask blockLayerMask;
 
-     // 1 normal coin = 5   
-    //  2 
+
 
     private NetworkVariable<int> totalCoins = new NetworkVariable<int>(0);
 
@@ -29,6 +28,9 @@ public class CoinCollector : NetworkBehaviour
 
     private const int Iterations_Numb = 40;
     private float _coinRad;
+
+
+
 
 
     public override void OnNetworkSpawn()
@@ -74,6 +76,7 @@ public class CoinCollector : NetworkBehaviour
     private void SpwanBountyCoin()
     {
         int bountyValue = (int)(totalCoins.Value * bountyValueRation);
+        Debug.Log("bounty value is " + bountyValue);
         if (bountyValue < minBountyVlaue) return;
 
         int bountyCoinValue = bountyValue / bountyCoinsCount;
@@ -86,16 +89,19 @@ public class CoinCollector : NetworkBehaviour
                 BountyCoin bountyCoin = Instantiate(bountyCoinPrefap, pos, Quaternion.identity);
                 bountyCoin.SetCoinValue(bountyCoinValue);
                 bountyCoin.NetworkObject.Spawn(true);
+                Debug.Log($"spwan coin {i}: value >> {bountyCoinValue}");
             }
             else
             {
                 BountyCoin bountyCoin = Instantiate(bountyCoinPrefap, transform.position, Quaternion.identity);
                 bountyCoin.SetCoinValue(bountyCoinValue);
                 bountyCoin.NetworkObject.Spawn(true);
+                Debug.Log($"spwan coin {i}: value >> {bountyCoinValue}");
             }
-
         }
+
     }
+
 
     private bool TryGetPosition(out Vector2 pos)
     {

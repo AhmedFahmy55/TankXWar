@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Leaderboard : NetworkBehaviour
 {
@@ -44,10 +45,12 @@ public class Leaderboard : NetworkBehaviour
             PlayerTank_OnPlayerSpawn(tank);
         }
     }
-    
+
+
     public override void OnNetworkDespawn()
     {
         leaderboardItemDatas.OnListChanged -= OnLeaderboardChange;
+
         if (!IsServer) return;
 
         PlayerTank.OnPlayerSpawn -= PlayerTank_OnPlayerSpawn;
@@ -114,8 +117,7 @@ public class Leaderboard : NetworkBehaviour
     }
     private void RemovePlayerFromLeaderboard(PlayerTank tank)
     {
-        if (leaderboardItemDatas == null) return;
-
+        if (leaderboardItemDatas == null ) return;
         foreach (var itemData in leaderboardItemDatas)
         {
             if (itemData.ClientID != tank.OwnerClientId) continue;
