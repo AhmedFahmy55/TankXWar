@@ -16,7 +16,7 @@ public class CoinCollector : NetworkBehaviour
     [Header("Settings")]
     [SerializeField, Range(0, 1)] private float bountyValueRation = .3f;
     [SerializeField] private int bountyCoinsCount = 10;
-    [SerializeField] private int minBountyVlaue = 50;
+    [SerializeField] private int minBountyVlaue = 30;
     [SerializeField] private float dropeRange = 3f;
     [SerializeField] private LayerMask blockLayerMask;
 

@@ -39,7 +39,7 @@ public class CoinsSpwaner : NetworkBehaviour
 
             RespwaningCoin coin =  Instantiate(respwaningCoinPrefap,pos,Quaternion.identity);
             coin.SetCoinValue(coinValue);
-            coin.GetComponent<NetworkObject>().Spawn();
+            coin.NetworkObject.Spawn(true);
             coin.OnCoinCollected += RespwaningCoin_OnCoinCollected;
         }
     }

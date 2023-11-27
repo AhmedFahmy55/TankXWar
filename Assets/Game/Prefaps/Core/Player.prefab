@@ -1067,7 +1067,7 @@ MonoBehaviour:
   bountyValueRation: 0.3
   bountyCoinsCount: 10
   minBountyVlaue: 50
-  dropeRange: 5
+  dropeRange: 2.5
   blockLayerMask:
     serializedVersion: 2
     m_Bits: 257
