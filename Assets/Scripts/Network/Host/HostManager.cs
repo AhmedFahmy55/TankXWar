@@ -93,11 +93,14 @@ public class HostManager : IDisposable
         byte[] payLoadByts = Encoding.UTF8.GetBytes(JsonUtility.ToJson(playerData));
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payLoadByts;
 
+        NetworkServer.OnClientDisconnect += OnClientDisconnect;
         networkManager.StartHost();
         networkManager.SceneManager.LoadScene(Game_Scene, UnityEngine.SceneManagement.LoadSceneMode.Single);
         _isCreatingLobby = false;
 
     }
+
+
 
     IEnumerator LobbyHeartBeat(float freshreate)
     {
@@ -131,14 +134,31 @@ public class HostManager : IDisposable
         return await LobbyService.Instance.CreateLobbyAsync(lobbyName, Max_Players, lobbyOptions);
     }
 
-    public async void Dispose()
+
+    private void OnClientDisconnect(ulong arg1, string arg2)
+    {
+        
+    }
+
+    public async void ShutDown()
     {
         HostSingelton.Instance.StopCoroutine(nameof(LobbyHeartBeat));
 
-        if(joinedLobby != null)
+        if (joinedLobby != null)
         {
+            Debug.Log("Dispose");
             string playerId = AuthenticationService.Instance.PlayerId;
             await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
         }
+
+        NetworkServer.OnClientDisconnect -= OnClientDisconnect;
+        NetworkServer.Dispose();
     }
+    public  void Dispose()
+    {
+
+        ShutDown();
+    }
+
+
 }

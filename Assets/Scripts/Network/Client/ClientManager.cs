@@ -215,4 +215,9 @@ public class ClientManager : IDisposable
         }
         NetworkClient?.Dispose();
     }
+
+    public void LeaveGame()
+    {
+        NetworkClient.LeaveGame();
+    }
 }

@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class NetworkServer : IDisposable
 {
-    public event Action<ulong> OnClientDisconnect;
+    public event Action<ulong,string> OnClientDisconnect;
 
     private Dictionary<ulong,string> clientIDToAuthID = new Dictionary<ulong,string>();
     private Dictionary<string, PlayerData> authIDToPlayerData = new Dictionary<string, PlayerData>();
@@ -75,6 +75,7 @@ public class NetworkServer : IDisposable
         {
             clientIDToAuthID.Remove(clientID);
             authIDToPlayerData.Remove(authID);
+            OnClientDisconnect?.Invoke(clientID, authID);
         }
     }
 

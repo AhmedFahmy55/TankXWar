@@ -25,11 +25,8 @@ public class LobbyListUI : MonoBehaviour
         RefreshLobbisList();
     }
 
-    private void Start()
+    private void Awake()
     {
-        ClientSingelton.Instance.ClientManager.OnStartToJoinLobby += ClientManager_OnStartToJoinLobby;
-        ClientSingelton.Instance.ClientManager.OnFailedToJoinLobby += ClientManager_OnFailedToJoinLobby;
-
         joinCodeInputField.onValueChanged.AddListener((x) =>
         {
             joinByCodeButton.interactable = string.IsNullOrEmpty(x) ? false : true;
@@ -47,10 +44,17 @@ public class LobbyListUI : MonoBehaviour
             await ClientSingelton.Instance.ClientManager.JoinLobbyByCode(joinCodeInputField.text);
         });
     }
+
+    private void Start()
+    {
+        ClientSingelton.Instance.ClientManager.OnStartToJoinLobby += ClientManager_OnStartToJoinLobby;
+        ClientSingelton.Instance.ClientManager.OnFailedToJoinLobby += ClientManager_OnFailedToJoinLobby;
+
+    }
     private void OnDestroy()
     {
-        if (ClientSingelton.Instance) ClientSingelton.Instance.ClientManager.OnStartToJoinLobby += ClientManager_OnStartToJoinLobby;
-        if (ClientSingelton.Instance) ClientSingelton.Instance.ClientManager.OnFailedToJoinLobby += ClientManager_OnFailedToJoinLobby;
+        if (ClientSingelton.Instance) ClientSingelton.Instance.ClientManager.OnStartToJoinLobby -= ClientManager_OnStartToJoinLobby;
+        if (ClientSingelton.Instance) ClientSingelton.Instance.ClientManager.OnFailedToJoinLobby -= ClientManager_OnFailedToJoinLobby;
     }
 
     private void Update()
@@ -77,8 +81,15 @@ public class LobbyListUI : MonoBehaviour
     public async void RefreshLobbisList()
     {
         List<Lobby> lobbies = await ClientSingelton.Instance.ClientManager.ListLobbies();
-        if (lobbies == null) return;
-
+        if (lobbies == null)
+        {
+            foreach (Transform chield in lobbyItemParent)
+            {
+                Destroy(chield.gameObject);
+            }
+            return;
+        }
+        
         foreach (Transform chield in  lobbyItemParent)
         {
             Destroy(chield.gameObject);

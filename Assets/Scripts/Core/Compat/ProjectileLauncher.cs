@@ -33,7 +33,7 @@ public class ProjectileLauncher : NetworkBehaviour
 
     private void Awake()
     {
-        playerCollider = GetComponent<Collider2D>();
+        playerCollider = GetComponentInChildren<Collider2D>();
     }
 
     public override void OnNetworkSpawn()
