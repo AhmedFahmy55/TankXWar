@@ -66,7 +66,7 @@ public class Leaderboard : NetworkBehaviour
     {
         AddPlayerToLeaderboard(tank);
 
-        tank.GetComponent<CoinCollector>().OnCollectCoin += (newValue)=> 
+        tank.CoinCollector.OnCollectCoin += (newValue)=> 
             CoinCollector_OnCollectCoins(tank.OwnerClientId,newValue);
     }
 
@@ -75,7 +75,7 @@ public class Leaderboard : NetworkBehaviour
     {
         RemovePlayerFromLeaderboard(tank);
 
-        tank.GetComponent<CoinCollector>().OnCollectCoin -= (newValue) =>
+        tank.CoinCollector.OnCollectCoin -= (newValue) =>
             CoinCollector_OnCollectCoins(tank.OwnerClientId, newValue);
     }
 

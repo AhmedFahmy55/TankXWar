@@ -14,14 +14,16 @@ public class PlayerTank : NetworkBehaviour
 
 
     [Header("Refs")]
-    [SerializeField] CinemachineVirtualCamera playerCam;
+    [SerializeField] private CinemachineVirtualCamera playerCam;
+    [SerializeField] private SpriteRenderer MiniMapIcon;
     [field: SerializeField] public Health PlayerHealth { get; private set; }
     [field: SerializeField] public CoinCollector CoinCollector { get; private set; }
 
 
 
     [Header("Settings")]
-    [SerializeField] int playerCamPrio = 20;
+    [SerializeField] private int playerCamPrio = 20;
+    [SerializeField] private Color PlayerminiMapIconColor = Color.cyan;
 
     
     [HideInInspector] public NetworkVariable<FixedString32Bytes> PlayerName = new NetworkVariable<FixedString32Bytes>();
@@ -34,6 +36,7 @@ public class PlayerTank : NetworkBehaviour
         if (IsOwner)
         {
             playerCam.Priority = playerCamPrio;
+            MiniMapIcon.color = PlayerminiMapIconColor;
         }
 
         if (IsServer)
@@ -41,9 +44,11 @@ public class PlayerTank : NetworkBehaviour
             PlayerName.Value = HostSingelton.Instance.HostManager.NetworkServer.
                 GetPlayerDataByClientID(OwnerClientId).playerName;
         }
+        if(IsClient)
+        {
+            OnPlayerSpawn?.Invoke(this);
 
-        OnPlayerSpawn?.Invoke(this);
-
+        }
     }
 
     public override void OnNetworkDespawn()

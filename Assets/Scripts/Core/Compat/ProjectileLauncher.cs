@@ -85,7 +85,7 @@ public class ProjectileLauncher : NetworkBehaviour
         Transform projectile = Instantiate(projectilePrefap, projectileSpawnPivot.position, Quaternion.identity);
         projectile.up = projectileSpawnPivot.up;
 
-        Physics2D.IgnoreCollision(playerCollider, projectile.GetComponent<Collider2D>());
+        Physics2D.IgnoreCollision(playerCollider, projectile.GetComponentInChildren<Collider2D>());
 
         if (projectile.TryGetComponent<Rigidbody2D>(out Rigidbody2D rb))
         {

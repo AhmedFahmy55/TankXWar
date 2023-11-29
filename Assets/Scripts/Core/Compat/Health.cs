@@ -26,7 +26,11 @@ public class Health : NetworkBehaviour
         if (!IsServer) return;
         _currentHealth.Value = MaxHealth;
     }
+    public override void OnNetworkDespawn()
+    {
+        _currentHealth.OnValueChanged -= OnHealthValueChange;
 
+    }
     private void OnHealthValueChange(int previousValue, int newValue)
     {
         OnPlayerHealthChange?.Invoke(newValue);
@@ -60,5 +64,9 @@ public class Health : NetworkBehaviour
     {
         _currentHealth.Value = MaxHealth;
         _isDead = false;
+    }
+    public bool IsFullHealth()
+    {
+        return _currentHealth.Value == MaxHealth;
     }
 }

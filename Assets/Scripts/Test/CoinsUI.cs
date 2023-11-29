@@ -32,14 +32,12 @@ public class CoinsUI : MonoBehaviour
     private void PlayerTank_OnPlayerDeSpwan(PlayerTank tank)
     {
         if (tank.OwnerClientId != NetworkManager.Singleton.LocalClientId) return;
-        Debug.Log("UnSubbing");
         tank.CoinCollector.OnCoinsValueChage -= CoinCollector_OnCoinValueChange;
     }
 
     private void PlayerTank_OnPlayerSpwan(PlayerTank tank)
     {
         if (tank.OwnerClientId != NetworkManager.Singleton.LocalClientId) return;
-        Debug.Log("Subbing");
         tank.CoinCollector.OnCoinsValueChage += CoinCollector_OnCoinValueChange;
         CoinCollector_OnCoinValueChange(tank.CoinCollector.GetCoins());
     }

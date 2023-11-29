@@ -15,8 +15,8 @@ TagManager:
   - Pickup
   - Enviro
   - Player
-  - 
-  - 
+  - MiniMap
+  - Sun
   - 
   - 
   - 
@@ -49,6 +49,9 @@ TagManager:
     locked: 0
   - name: Coin
     uniqueID: 907845915
+    locked: 0
+  - name: Projectile
+    uniqueID: 2962687671
     locked: 0
   - name: Player
     uniqueID: 721038087

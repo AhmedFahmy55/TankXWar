@@ -55,6 +55,12 @@ public class CoinCollector : NetworkBehaviour
         playerHealth.OnPlayerDie -= Health_OnPlayerDie;
 
     }
+
+    private void Health_OnPlayerDie()
+    {
+        SpwanBountyCoin();
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (!collision.TryGetComponent<Coin>(out Coin coin)) return;
@@ -65,18 +71,11 @@ public class CoinCollector : NetworkBehaviour
         if (!IsServer) return;
 
         totalCoins.Value += value;
-
-    }
-
-    private void Health_OnPlayerDie()
-    {
-        SpwanBountyCoin();
     }
 
     private void SpwanBountyCoin()
     {
         int bountyValue = (int)(totalCoins.Value * bountyValueRation);
-        Debug.Log("bounty value is " + bountyValue);
         if (bountyValue < minBountyVlaue) return;
 
         int bountyCoinValue = bountyValue / bountyCoinsCount;
@@ -89,14 +88,12 @@ public class CoinCollector : NetworkBehaviour
                 BountyCoin bountyCoin = Instantiate(bountyCoinPrefap, pos, Quaternion.identity);
                 bountyCoin.SetCoinValue(bountyCoinValue);
                 bountyCoin.NetworkObject.Spawn(true);
-                Debug.Log($"spwan coin {i}: value >> {bountyCoinValue}");
             }
             else
             {
                 BountyCoin bountyCoin = Instantiate(bountyCoinPrefap, transform.position, Quaternion.identity);
                 bountyCoin.SetCoinValue(bountyCoinValue);
                 bountyCoin.NetworkObject.Spawn(true);
-                Debug.Log($"spwan coin {i}: value >> {bountyCoinValue}");
             }
         }
 
