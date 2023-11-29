@@ -105,7 +105,7 @@ public class Leaderboard : NetworkBehaviour
     private void AddPlayerToLeaderboard(PlayerTank tank)
     {
         if (leaderboardItemDatas == null) return;
-
+        
         PlayerData playerData = HostSingelton.Instance.HostManager.NetworkServer.GetPlayerDataByClientID(tank.OwnerClientId);
         LeaderboardItemData leaderboardItemData = new LeaderboardItemData
         {
@@ -120,7 +120,7 @@ public class Leaderboard : NetworkBehaviour
         if (leaderboardItemDatas == null ) return;
         foreach (var itemData in leaderboardItemDatas)
         {
-            if (itemData.ClientID != tank.OwnerClientId) continue;
+            if (itemData.ClientID != tank.OwnerClientId ) continue;
             leaderboardItemDatas.Remove(itemData);
             break;
         }
