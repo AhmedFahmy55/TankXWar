@@ -26,6 +26,7 @@ public class NetworkClient : IDisposable
 
     private void OnClientDisconnect(ulong clientID)
     {
+        //to guard against the host cus this will be invoked at host too >> he is client too
         if (clientID != 0) return;
         LeaveGame();
     }

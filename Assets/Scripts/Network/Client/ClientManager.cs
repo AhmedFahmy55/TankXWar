@@ -206,18 +206,15 @@ public class ClientManager : IDisposable
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payLoadByts;
     }
 
-    public async void Dispose()
-    {
-        if(joinedLobby != null)
-        {
-            string playerId = AuthenticationService.Instance.PlayerId;
-            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
-        }
-        NetworkClient?.Dispose();
-    }
-
-    public void LeaveGame()
+    public void Disconnect()
     {
         NetworkClient.LeaveGame();
     }
+
+    public void Dispose()
+    { 
+        NetworkClient?.Dispose();
+    }
+
+
 }

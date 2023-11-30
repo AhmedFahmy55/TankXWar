@@ -19,7 +19,7 @@ public class HudUI : MonoBehaviour
                 HostSingelton.Instance.HostManager.ShutDown();
             }
 
-            ClientSingelton.Instance.ClientManager.LeaveGame();
+            ClientSingelton.Instance.ClientManager.Disconnect();
         });
     }
 }

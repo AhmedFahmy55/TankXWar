@@ -38,6 +38,7 @@ public class Leaderboard : NetworkBehaviour
 
         PlayerTank.OnPlayerSpawn += PlayerTank_OnPlayerSpawn;
         PlayerTank.OnPlayerDespawn += PlayerTank_OnPlayerDespawn;
+        HostSingelton.Instance.HostManager.NetworkServer.OnClientDisconnect += NetworkServer_OnClientDisconnect;
 
         PlayerTank[] playerTanks = FindObjectsByType<PlayerTank>(FindObjectsSortMode.None);
         foreach (var tank in playerTanks)
@@ -45,6 +46,7 @@ public class Leaderboard : NetworkBehaviour
             PlayerTank_OnPlayerSpawn(tank);
         }
     }
+
 
 
     public override void OnNetworkDespawn()
@@ -60,6 +62,9 @@ public class Leaderboard : NetworkBehaviour
     private void OnLeaderboardChange(NetworkListEvent<LeaderboardItemData> changeEvent)
     {
         OnLeaderboardValueChange?.Invoke(changeEvent);
+        if(!IsServer) return;
+        HostSingelton.Instance.HostManager.NetworkServer.OnClientDisconnect -= NetworkServer_OnClientDisconnect;
+
     }
 
     private void PlayerTank_OnPlayerSpawn(PlayerTank tank)
@@ -73,8 +78,6 @@ public class Leaderboard : NetworkBehaviour
 
     private void PlayerTank_OnPlayerDespawn(PlayerTank tank)
     {
-        RemovePlayerFromLeaderboard(tank);
-
         tank.CoinCollector.OnCollectCoin -= (newValue) =>
             CoinCollector_OnCollectCoins(tank.OwnerClientId, newValue);
     }
@@ -101,11 +104,19 @@ public class Leaderboard : NetworkBehaviour
             }
         }
     }
-
+    private void NetworkServer_OnClientDisconnect(ulong ClientID, string AuthID)
+    {
+        RemovePlayerFromLeaderboard(ClientID);
+    }
     private void AddPlayerToLeaderboard(PlayerTank tank)
     {
         if (leaderboardItemDatas == null) return;
-        
+
+        foreach (var data in leaderboardItemDatas)
+        {
+            if (data.ClientID == tank.OwnerClientId) return;
+        }
+
         PlayerData playerData = HostSingelton.Instance.HostManager.NetworkServer.GetPlayerDataByClientID(tank.OwnerClientId);
         LeaderboardItemData leaderboardItemData = new LeaderboardItemData
         {
@@ -115,14 +126,16 @@ public class Leaderboard : NetworkBehaviour
         };
         leaderboardItemDatas.Add(leaderboardItemData);
     }
-    private void RemovePlayerFromLeaderboard(PlayerTank tank)
+
+    private void RemovePlayerFromLeaderboard(ulong ClientID)
     {
         if (leaderboardItemDatas == null ) return;
         foreach (var itemData in leaderboardItemDatas)
         {
-            if (itemData.ClientID != tank.OwnerClientId ) continue;
+            if (itemData.ClientID != ClientID) continue;
             leaderboardItemDatas.Remove(itemData);
             break;
         }
     }
+
 }

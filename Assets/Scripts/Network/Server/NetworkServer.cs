@@ -84,6 +84,5 @@ public class NetworkServer : IDisposable
         if(networkManager) networkManager.ConnectionApprovalCallback = null;
         if(networkManager) networkManager.OnServerStarted -= OnServerReady;
         if(networkManager) networkManager.OnClientDisconnectCallback -= NetworkManager_OnClientDisconnect;
-
     }
 }

@@ -40,6 +40,7 @@ public class HealZone : NetworkBehaviour
     public override void OnNetworkDespawn()
     {
         _healPowerCount.OnValueChanged -= (oldValue, newValue) => OnHealZoneValueChange?.Invoke(newValue);
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -107,4 +108,5 @@ public class HealZone : NetworkBehaviour
     {
         return _healPowerCount.Value;
     }
+
 }

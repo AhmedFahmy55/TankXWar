@@ -79,6 +79,8 @@ public class HostManager : IDisposable
         networkManager.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(allocation, "udp"));
 
         NetworkServer = new NetworkServer(networkManager);
+        NetworkServer.OnClientDisconnect += OnClientDisconnect;
+
 
         string playerName = PlayerPrefs.GetString(LobbyCreationUI.Player_Name_Key,
                 "Player" + UnityEngine.Random.Range(1, 100));
@@ -93,7 +95,6 @@ public class HostManager : IDisposable
         byte[] payLoadByts = Encoding.UTF8.GetBytes(JsonUtility.ToJson(playerData));
         NetworkManager.Singleton.NetworkConfig.ConnectionData = payLoadByts;
 
-        NetworkServer.OnClientDisconnect += OnClientDisconnect;
         networkManager.StartHost();
         networkManager.SceneManager.LoadScene(Game_Scene, UnityEngine.SceneManagement.LoadSceneMode.Single);
         _isCreatingLobby = false;
@@ -135,30 +136,45 @@ public class HostManager : IDisposable
     }
 
 
-    private void OnClientDisconnect(ulong arg1, string arg2)
+
+
+    private async Task LeaveLobby(string AuthID)
     {
-        
+        if (joinedLobby == null) return;
+        try
+        {
+            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, AuthID);
+
+        }
+        catch (Exception ex)
+        {
+            Debug.Log(ex);
+        }
+
+    }
+    private async void OnClientDisconnect(ulong clientID, string AuthID)
+    {
+        await LeaveLobby(AuthID);
     }
 
     public async void ShutDown()
     {
         HostSingelton.Instance.StopCoroutine(nameof(LobbyHeartBeat));
 
-        if (joinedLobby != null)
+        try
         {
-            Debug.Log("Dispose");
-            string playerId = AuthenticationService.Instance.PlayerId;
-            await LobbyService.Instance.RemovePlayerAsync(joinedLobby.Id, playerId);
+            if(joinedLobby != null) await LobbyService.Instance.DeleteLobbyAsync(joinedLobby.Id);
         }
+        catch(Exception ex) { Debug.Log(ex);}
 
-        NetworkServer.OnClientDisconnect -= OnClientDisconnect;
-        NetworkServer.Dispose();
+        if(NetworkServer != null) NetworkServer.OnClientDisconnect -= OnClientDisconnect;
+
     }
     public  void Dispose()
     {
-
         ShutDown();
+        NetworkServer?.Dispose();
+        
     }
-
 
 }
