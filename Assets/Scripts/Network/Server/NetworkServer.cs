@@ -75,6 +75,7 @@ public class NetworkServer : IDisposable
         {
             clientIDToAuthID.Remove(clientID);
             authIDToPlayerData.Remove(authID);
+            Debug.Log("client disconnected" + clientID);
             OnClientDisconnect?.Invoke(clientID, authID);
         }
     }

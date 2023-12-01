@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Leaderboard : NetworkBehaviour
 {
@@ -57,13 +56,13 @@ public class Leaderboard : NetworkBehaviour
 
         PlayerTank.OnPlayerSpawn -= PlayerTank_OnPlayerSpawn;
         PlayerTank.OnPlayerDespawn -= PlayerTank_OnPlayerDespawn;
+        HostSingelton.Instance.HostManager.NetworkServer.OnClientDisconnect -= NetworkServer_OnClientDisconnect;
     }
 
     private void OnLeaderboardChange(NetworkListEvent<LeaderboardItemData> changeEvent)
     {
         OnLeaderboardValueChange?.Invoke(changeEvent);
         if(!IsServer) return;
-        HostSingelton.Instance.HostManager.NetworkServer.OnClientDisconnect -= NetworkServer_OnClientDisconnect;
 
     }
 
@@ -106,6 +105,8 @@ public class Leaderboard : NetworkBehaviour
     }
     private void NetworkServer_OnClientDisconnect(ulong ClientID, string AuthID)
     {
+        Debug.Log("LeaderBoard client disconnected" + ClientID);
+
         RemovePlayerFromLeaderboard(ClientID);
     }
     private void AddPlayerToLeaderboard(PlayerTank tank)
