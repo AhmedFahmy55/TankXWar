@@ -1132,8 +1132,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   inputReader: {fileID: 11400000, guid: 58e5b386811285a40b80cddebd78006a, type: 2}
   tankbody: {fileID: 4894022048409967222}
-  rotaionSpeed: 270
-  movementSpeed: 5
+  rotaionSpeed: 300
+  movementSpeed: 8
 --- !u!114 &1764081860057486492
 MonoBehaviour:
   m_ObjectHideFlags: 0
