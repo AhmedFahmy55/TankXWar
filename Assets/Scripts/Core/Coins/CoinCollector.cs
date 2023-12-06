@@ -56,7 +56,7 @@ public class CoinCollector : NetworkBehaviour
 
     }
 
-    private void Health_OnPlayerDie()
+    private void Health_OnPlayerDie(ulong killerID)
     {
         SpwanBountyCoin();
     }

@@ -5,9 +5,18 @@ using UnityEngine;
 public class DealDamageOnCollision : MonoBehaviour
 {
 
+
+
     [SerializeField] int damage;
 
+    private ulong damagerID;
 
+
+
+    public void Init(ulong damagerID)
+    {
+        this.damagerID = damagerID;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -15,7 +24,7 @@ public class DealDamageOnCollision : MonoBehaviour
 
         if(collision.TryGetComponent<Health>(out Health health))
         {
-            health.DealDamage(damage);
+            health.DealDamage(damage,damagerID);
         }
     }
 }

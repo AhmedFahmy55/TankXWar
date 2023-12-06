@@ -71,11 +71,11 @@ public class ProjectileLauncher : NetworkBehaviour
             if(!_shouldFire) return;
             if (coinCollector.GetCoins() < shootCost) return;
             SpwanProjectileServerRpc();
-            SpawnProjectile(clientProjectilePrefap);
+            SpawnProjectile(clientProjectilePrefap,OwnerClientId);
         }
     }
 
-    private void SpawnProjectile(Transform projectilePrefap)
+    private void SpawnProjectile(Transform projectilePrefap,ulong clientID)
     {
         _timeSinceLastFlashMuzzle = muzzleDuration;
         _TimeSinceLastShoot = 1 / fireRate;
@@ -84,6 +84,11 @@ public class ProjectileLauncher : NetworkBehaviour
 
         Transform projectile = Instantiate(projectilePrefap, projectileSpawnPivot.position, Quaternion.identity);
         projectile.up = projectileSpawnPivot.up;
+
+        if(projectile.TryGetComponent<DealDamageOnCollision>(out DealDamageOnCollision damager))
+        {
+            damager.Init(clientID);
+        }
 
         Physics2D.IgnoreCollision(playerCollider, projectile.GetComponentInChildren<Collider2D>());
 
@@ -96,20 +101,20 @@ public class ProjectileLauncher : NetworkBehaviour
 
 
     [ServerRpc(RequireOwnership = false)]
-    private void SpwanProjectileServerRpc()
+    private void SpwanProjectileServerRpc(ServerRpcParams serverRpcParams = default)
     {
         if (coinCollector.GetCoins() < shootCost) return;
 
         coinCollector.SpendCoins(shootCost);
-        SpawnProjectile(serverProjectilePrefap);
-        SpwanProjectileClientRpc();
+        SpawnProjectile(serverProjectilePrefap,serverRpcParams.Receive.SenderClientId);
+        SpwanProjectileClientRpc(serverRpcParams.Receive.SenderClientId);
     }
 
 
     [ClientRpc]
-    private void SpwanProjectileClientRpc()
+    private void SpwanProjectileClientRpc(ulong clientID)
     {
         if (IsOwner) return;
-        SpawnProjectile(clientProjectilePrefap);
+        SpawnProjectile(clientProjectilePrefap, clientID);
     }
 }

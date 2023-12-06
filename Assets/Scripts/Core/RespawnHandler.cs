@@ -37,12 +37,12 @@ public class RespawnHandler : NetworkBehaviour
 
     private void PlayerTank_OnPlayerSpawn(PlayerTank playerTank)
     {
-        playerTank.PlayerHealth.OnPlayerDie += () => PlayerTank_OnPlayerDie(playerTank);
+        playerTank.PlayerHealth.OnPlayerDie += (clientID) => PlayerTank_OnPlayerDie(playerTank);
     }
 
     private void PlayerTank_OnPlayerDespawn(PlayerTank playerTank)
     {
-        playerTank.PlayerHealth.OnPlayerDie -= () => PlayerTank_OnPlayerDie(playerTank);
+        playerTank.PlayerHealth.OnPlayerDie -= (clientID) => PlayerTank_OnPlayerDie(playerTank);
     }
 
     private void PlayerTank_OnPlayerDie(PlayerTank playerTank)

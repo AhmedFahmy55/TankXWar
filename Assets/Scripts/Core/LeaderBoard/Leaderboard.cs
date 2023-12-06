@@ -71,31 +71,31 @@ public class Leaderboard : NetworkBehaviour
     {
         AddPlayerToLeaderboard(tank);
 
-        tank.CoinCollector.OnCollectCoin += (newValue)=> 
-            CoinCollector_OnCollectCoins(tank.OwnerClientId,newValue);
+        tank.PlayerHealth.OnPlayerDie += Health_OnPlayerDie;
+            
     }
 
 
     private void PlayerTank_OnPlayerDespawn(PlayerTank tank)
     {
-        tank.CoinCollector.OnCollectCoin -= (newValue) =>
-            CoinCollector_OnCollectCoins(tank.OwnerClientId, newValue);
+        tank.PlayerHealth.OnPlayerDie -= Health_OnPlayerDie;
+
     }
 
 
-    private void CoinCollector_OnCollectCoins(ulong clientID,int newValue)
+    private void Health_OnPlayerDie(ulong killerID)
     {
         for(int i = 0; i < leaderboardItemDatas.Count; i++)
         {
-            if (leaderboardItemDatas[i].ClientID == clientID)
+            if (leaderboardItemDatas[i].ClientID == killerID)
             {
-                PlayerData playerData = HostSingelton.Instance.HostManager.NetworkServer.GetPlayerDataByClientID(clientID);
-                playerData.PlayerScore = leaderboardItemDatas[i].Score + newValue;
-                HostSingelton.Instance.HostManager.NetworkServer.UpdatePlayerData(clientID, playerData);
+                PlayerData playerData = HostSingelton.Instance.HostManager.NetworkServer.GetPlayerDataByClientID(killerID);
+                playerData.PlayerScore = leaderboardItemDatas[i].Score + 1;
+                HostSingelton.Instance.HostManager.NetworkServer.UpdatePlayerData(killerID, playerData);
 
                 leaderboardItemDatas[i] = new LeaderboardItemData()
                 {
-                    ClientID = clientID,
+                    ClientID = killerID,
                     PlayerName = leaderboardItemDatas[i].PlayerName,
                     Score = playerData.PlayerScore,
                 };

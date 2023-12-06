@@ -7,7 +7,7 @@ using UnityEngine;
 public class Health : NetworkBehaviour
 {
 
-    public event Action OnPlayerDie;
+    public event Action<ulong> OnPlayerDie;
     public event Action<int> OnPlayerHealthChange;
 
     [field: SerializeField] public int MaxHealth { get; private set; }
@@ -36,17 +36,17 @@ public class Health : NetworkBehaviour
         OnPlayerHealthChange?.Invoke(newValue);
     }
 
-    public void DealDamage(int damageAmount)
+    public void DealDamage(int damageAmount,ulong damagerID)
     {
-        ModifyHealth(-damageAmount);
+        ModifyHealth(-damageAmount,damagerID);
     }
 
     public void Heal(int healAmount)
     {
-        ModifyHealth(healAmount);
+        ModifyHealth(healAmount,0);
     }
 
-    private void ModifyHealth(int amount)
+    private void ModifyHealth(int amount,ulong damagerID)
     {
         if (_isDead) return;
 
@@ -56,7 +56,7 @@ public class Health : NetworkBehaviour
 
         if (health == 0)
         {
-            OnPlayerDie?.Invoke();
+            OnPlayerDie?.Invoke(damagerID);
         }
 
     }
