@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -47,6 +46,4 @@ public class NetworkClient : IDisposable
     {
         if(networkManager) networkManager.OnClientDisconnectCallback -= OnClientDisconnect;
     }
-
-
 }

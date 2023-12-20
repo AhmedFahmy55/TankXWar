@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
 using UnityEngine;
 
 public class NetworkServer : IDisposable
@@ -23,6 +24,11 @@ public class NetworkServer : IDisposable
         networkManager.OnServerStarted += OnServerReady;
     }
 
+    public bool OpenConnection(string IP,int port)
+    {
+         networkManager.GetComponent<UnityTransport>().SetConnectionData(IP, (ushort)port);
+         return networkManager.StartServer();
+    }
     public PlayerData GetPlayerDataByClientID(ulong clientID)
     {
         if(clientIDToAuthID.TryGetValue(clientID,out string authID))

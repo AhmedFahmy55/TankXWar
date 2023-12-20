@@ -72,7 +72,7 @@ public class ClientManager : IDisposable
             NetworkManager.Singleton.GetComponent<UnityTransport>()
                 .SetRelayServerData(new RelayServerData(JoinAllocation, "udp"));
 
-            SetPlayerconnectiondata();
+            SetPlayerConnectionData();
             NetworkManager.Singleton.StartClient();
             _isJoiningLobby = false;
 
@@ -100,7 +100,7 @@ public class ClientManager : IDisposable
 
             JoinAllocation = await RelayService.Instance.JoinAllocationAsync(allocationCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(JoinAllocation, "udp"));
-            SetPlayerconnectiondata();
+            SetPlayerConnectionData();
 
             NetworkManager.Singleton.StartClient();
             _isJoiningLobby = false;
@@ -140,7 +140,7 @@ public class ClientManager : IDisposable
 
             JoinAllocation = await RelayService.Instance.JoinAllocationAsync(allocationCode);
             NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(new RelayServerData(JoinAllocation, "udp"));
-            SetPlayerconnectiondata();
+            SetPlayerConnectionData();
 
             NetworkManager.Singleton.StartClient();
         }
@@ -191,7 +191,7 @@ public class ClientManager : IDisposable
         }
     }
 
-    private static void SetPlayerconnectiondata()
+    private static void SetPlayerConnectionData()
     {
         string playerName = PlayerPrefs.GetString(LobbyCreationUI.Player_Name_Key,
                         "Player" + UnityEngine.Random.Range(1, 100));
@@ -215,6 +215,5 @@ public class ClientManager : IDisposable
     { 
         NetworkClient?.Dispose();
     }
-
 
 }

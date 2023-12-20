@@ -1503,6 +1503,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   clientSingeltonPrefap: {fileID: 9120678788998708700, guid: dbf7bf6f7d3ca1441bcfec77dbba7a13, type: 3}
   hostSingeltonPrefap: {fileID: 6156876463660262200, guid: 7439320902d4cf84aa1deb327a7f6533, type: 3}
+  serverSingeltonPrefap: {fileID: 3935723185356019541, guid: 144b3daed0c36844688e3833c9bd0b63, type: 3}
 --- !u!4 &1651300747
 Transform:
   m_ObjectHideFlags: 0
